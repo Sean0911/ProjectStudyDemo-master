@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="btnText"
+            type="network.sean.com.projectstudy.bean.BtnTextEntity" />
+
+        <variable
+            name="rxjava"
+            type="network.sean.com.projectstudy.study.RxJava.RxJavaStudy" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tool="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="48dp"
+        android:orientation="vertical"
+        tool:context=".MainActivity">
+
+        <!--普通写法-->
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{rxjava::btn11}"
+            android:text="@{btnText.btn1}" />
+
+        <!--dispose用法，停止接收-->
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{rxjava::btn22}"
+            android:text="@{btnText.btn2}" />
+
+        <!--RxJava的线程调度-->
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{rxjava::btn33}"
+            android:text="@{btnText.btn3}" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{rxjava::btn44}"
+            android:text="@{btnText.btn4}" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{rxjava::btn55}"
+            android:text="@{btnText.btn5}" />
+    </LinearLayout>
+</layout>
