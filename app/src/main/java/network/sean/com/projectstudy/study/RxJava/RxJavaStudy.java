@@ -19,6 +19,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.internal.operators.observable.ObservableCreate;
@@ -30,7 +31,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RxJavaStudy {
 
-    public void btn11(View view){
+    public void btn11(View view) {
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
@@ -71,7 +72,7 @@ public class RxJavaStudy {
 
 
     //doOnNext()有问题接收不到发送的消息
-    public void btn33(View view){
+    public void btn33(View view) {
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
@@ -97,7 +98,7 @@ public class RxJavaStudy {
                 });
     }
 
-    public void btn22(View view){
+    public void btn22(View view) {
         final Disposable[] mDisposable = new Disposable[1];
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
@@ -126,7 +127,7 @@ public class RxJavaStudy {
             @Override
             public void onNext(String value) {
                 Logger.e("Receive" + value);
-                if(value.equals("2")){
+                if (value.equals("2")) {
                     Logger.e("dispose");
                     mDisposable[0].dispose();
                     Logger.e("isDisposed : " + mDisposable[0].isDisposed());
@@ -145,7 +146,8 @@ public class RxJavaStudy {
         });
     }
 
-    public void btn44(View view){
+    //操作符map  单一映射
+    public void btn44(View view) {
 
         Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
@@ -173,7 +175,8 @@ public class RxJavaStudy {
                 });
     }
 
-    public void btn55(View view){
+    //操作符flatMap 直接映射
+    public void btn55(View view) {
         Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) throws Exception {
@@ -196,5 +199,161 @@ public class RxJavaStudy {
                 Logger.e(s);
             }
         });
+    }
+
+    //操作符concatMap  合并数组之后映射
+    public void btn66(View view) {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                e.onNext(1);
+                e.onNext(2);
+                e.onNext(3);
+                e.onNext(4);
+            }
+        }).concatMap(new Function<Integer, ObservableSource<String>>() {
+            @Override
+            public ObservableSource<String> apply(Integer integer) throws Exception {
+                final List<String> list = new ArrayList<String>();
+                for (int i = 0; i < 3; i++) {
+                    list.add("I am value " + integer);
+                }
+                return Observable.fromIterable(list).delay(10, TimeUnit.MILLISECONDS);
+            }
+        }).subscribe(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                Logger.e(s);
+            }
+        });
+    }
+
+    //操作符zip
+    public void btn77(View view) {
+        Observable<Integer> observable1 = Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                Logger.e("Emitter - 1");
+                e.onNext(1);
+                Thread.sleep(1000);
+
+                Logger.e("Emitter - 2");
+                e.onNext(2);
+                Thread.sleep(1000);
+
+                Logger.e("Emitter - 3");
+                e.onNext(3);
+                Thread.sleep(1000);
+
+                Logger.e("Emitter - 4");
+                e.onNext(4);
+
+                Logger.e("Emitter Complete1");
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io());
+
+        Observable<String> observable2 = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
+                Logger.e("Emitter - A");
+                e.onNext("A");
+                Thread.sleep(1000);
+
+                Logger.e("Emitter - B");
+                e.onNext("B");
+                Thread.sleep(1000);
+
+                Logger.e("Emitter - C");
+                e.onNext("C");
+                Thread.sleep(1000);
+
+                Logger.e("Emitter Complete2");
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io());
+
+        Observable.zip(observable1, observable2, new BiFunction<Integer, String, String>() {
+            @Override
+            public String apply(Integer integer, String s) throws Exception {
+                return integer + s;
+            }
+        }).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Logger.e("onSubscribe");
+            }
+
+            @Override
+            public void onNext(String value) {
+                Logger.e(value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Logger.e("onError");
+            }
+
+            @Override
+            public void onComplete() {
+                Logger.e("onComplete");
+            }
+        });
+    }
+
+    public void btn88(View view) {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                for (int i = 0; ; i++) {
+                    e.onNext(i);
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+
+                    }
+                });
+    }
+
+    public void btn99(View view) {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                for (int i = 0; ; i++) {
+                    e.onNext(i);
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                .sample(2, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+
+                    }
+                });
+    }
+
+    public void btn10(View view) {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                for (int i = 0; ; i++) {
+                    e.onNext(i);
+                    Thread.sleep(2000);
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+
+                    }
+                });
     }
 }

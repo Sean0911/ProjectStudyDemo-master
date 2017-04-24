@@ -52,5 +52,30 @@
             android:layout_height="wrap_content"
             android:onClick="@{rxjava::btn55}"
             android:text="@{btnText.btn5}" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{rxjava::btn66}"
+            android:text="@{btnText.btn6}" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{rxjava::btn77}"
+            android:text="@{btnText.btn7}" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{rxjava::btn88}"
+            android:text="@{btnText.btn8}" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{rxjava::btn99}"
+            android:text="@{btnText.btn9}" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{rxjava::btn10}"
+            android:text="@{btnText.btn10}" />
     </LinearLayout>
 </layout>

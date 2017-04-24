@@ -23,12 +23,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
         ActivityMainBinding mainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
 
         BtnTextEntity btnTextEntity = new BtnTextEntity("RxJava普通应用","dispose断流接收","RxJava线程调度",
                 "RxJava变化操作符Map", "RxJava一变多无序操作符flatMap","RxJava一变多有序操作符concatMap",
-                "","","","");
+                "RxJava严格组合操作符Zip","RxJava背压概念Backpressure","RxJava Observable 数量解决背压问题","RxJava 速度解决背压问题");
         RxJavaStudy rxjavaStudy = new RxJavaStudy();
         mainBinding.includeAppMain.contentMain.setBtnText(btnTextEntity);
         mainBinding.includeAppMain.contentMain.setRxjava(rxjavaStudy);
